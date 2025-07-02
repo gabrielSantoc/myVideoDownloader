@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import { infoController } from '../../controller/infoController';
+import { vidInfoController } from '../../controller/infoController';
+import { downloadVidController } from '../../controller/downloadController';
 
 const router: Router = Router();
 
-router.post('/video/info', infoController);
+router.post('/video/info', vidInfoController);
+
+router.post('/video/download', downloadVidController);
 
 export default router;
 

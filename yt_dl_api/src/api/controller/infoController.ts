@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { exec } from 'child_process'
 
-export function infoController ( req: Request, res: Response ) {
+export function vidInfoController ( req: Request, res: Response ) {
 
   const url: string = req.body.url;
   
@@ -9,7 +9,7 @@ export function infoController ( req: Request, res: Response ) {
     res.json({ error: 'URL is required' })
   } 
 
-  // get vid info
+  // get vid info 
   const command = `yt-dlp -J "${url}"`;
 
   console.log(`>>> Video URL info for "${url}"`);

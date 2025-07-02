@@ -11,6 +11,7 @@ const startServer = () => {
   app.use(express.json());
   app.use(logger);
   app.use('/api/', routerV1);
+  app.use('/downloads', express.static('downloads'));
 
 
   app.listen(PORT, () => {

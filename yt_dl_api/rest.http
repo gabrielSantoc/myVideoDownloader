@@ -1,7 +1,18 @@
 
+### GET VID INFO
 POST http://localhost:3000/api/video/info HTTP/1.1
 content-type: application/json
 
 {
   "url": "https://www.youtube.com/watch?v=YCZu78lVESY"
+}
+
+### DOWNLOAD VIDEO
+POST http://localhost:3000/api/video/download HTTP/1.1
+content-type: application/json
+
+{
+  "url": "https://www.youtube.com/watch?v=YCZu78lVESY",
+  "quality": "720",
+  "audioOnly": false
 }
