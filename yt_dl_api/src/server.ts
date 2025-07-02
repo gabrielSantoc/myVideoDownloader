@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express';
 import routerV1 from "./api/routes/v1";
+import logger from "../src/middlewares/logger";
 
 const app = express();
 
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 const startServer = () => {
 
   app.use(express.json());
+  app.use(logger);
   app.use('/api/', routerV1);
 
 
