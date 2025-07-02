@@ -1,11 +1,10 @@
 import {Request, Response} from 'express';
 import {exec} from 'child_process'
 import path from 'path';
-import { stderr } from 'process';
 
 const ffmpegDir = path.resolve(__dirname, '../../../bin');
 
-export function downloadVidController( req: Request, res: Response ) {
+export function downloadVidController( req: Request, res:   Response ) {
 
   const url: string = req.body.url;
   const quality: string = req.body.quality || '720';

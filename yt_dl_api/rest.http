@@ -1,6 +1,6 @@
 
 ### GET VID INFO
-POST http://localhost:3000/api/video/info HTTP/1.1
+POST http://localhost:3000/api/v1/video/info HTTP/1.1
 content-type: application/json
 
 {
@@ -8,7 +8,7 @@ content-type: application/json
 }
 
 ### DOWNLOAD VIDEO
-POST http://localhost:3000/api/video/download HTTP/1.1
+POST http://localhost:3000/api/v1/video/download HTTP/1.1
 content-type: application/json
 
 {
@@ -16,3 +16,7 @@ content-type: application/json
   "quality": "720",
   "audioOnly": false
 }
+
+### SERVE VIDEO
+GET http://localhost:3000/api/v1/video/download/The%204%20Stages%20Of%20Being%20A%20Software%20Dev.mp4 HTTP/1.1
+content-type: application/json
