@@ -13,7 +13,7 @@ content-type: application/json
 
 {
   "url": "https://www.youtube.com/watch?v=YCZu78lVESY",
-  "quality": "720",
+  "quality": "480",
   "audioOnly": false
 }
 
