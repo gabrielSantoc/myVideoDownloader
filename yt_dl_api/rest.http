@@ -20,3 +20,11 @@ content-type: application/json
 ### SERVE VIDEO
 GET http://localhost:3000/api/v1/video/download/The%204%20Stages%20Of%20Being%20A%20Software%20Dev.mp4 HTTP/1.1
 content-type: application/json
+
+### FORMATS AND QUALITY
+GET http://localhost:3000/api/v1/video/formats-quality HTTP/1.1
+content-type: application/json
+
+{
+  "url": "https://www.youtube.com/watch?v=YCZu78lVESY"
+}

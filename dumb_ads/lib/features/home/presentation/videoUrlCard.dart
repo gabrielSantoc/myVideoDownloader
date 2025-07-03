@@ -1,7 +1,5 @@
 
 import 'package:dumb_ads/features/home/application/pasteFromClipboard.dart';
-import 'package:dumb_ads/features/home/providers/clearButtonProvider.dart';
-import 'package:dumb_ads/features/home/providers/controllerProvider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dumb_ads/shared/elevatedButton.dart';
 import 'package:dumb_ads/shared/constant.dart';
@@ -14,9 +12,7 @@ class VideoUrlCardWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final urlTextController = ref.watch(urlControllerProvider);
     
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Card(
@@ -52,7 +48,6 @@ class VideoUrlCardWidget extends ConsumerWidget {
                 child: ElevatedButtonWidget(
                   onTap: () {
                     pasteText(ref);
-                    ref.invalidate(clearButtonProvider);
                   },
                   buttonText: "Paste from cliboard",
                 )

@@ -1,13 +1,19 @@
 import 'package:dumb_ads/features/home/presentation/dialog.dart';
+import 'package:dumb_ads/features/home/providers/controllerProvider.dart';
+import 'package:dumb_ads/features/home/providers/snackBarProvider.dart';
+import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
+import 'package:dumb_ads/services/snackBarService.dart';
+import 'package:dumb_ads/services/videoDownloaderService.dart';
 import 'package:dumb_ads/shared/constant.dart';
 import 'package:dumb_ads/shared/elevatedButton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DownloadOptionsCardWidget extends StatelessWidget {
+class DownloadOptionsCardWidget extends ConsumerWidget {
   const DownloadOptionsCardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Card(
@@ -35,12 +41,44 @@ class DownloadOptionsCardWidget extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButtonWidget(
-                  onTap: () {
+                  onTap: () async{
+                    final controller = ref.read(urlControllerProvider);
+                    final snackBarService = ref.watch(snackBarServiceProvider);
+                    final url = controller.text.trim();
 
-                    showDialog(
-                      context: context,
-                      builder: (context) => const DialogWidget()
-                    );
+                    if(controller.text.isEmpty) {
+                      snackBarService.showSnackBar("Link cannot be empty");
+                      return;
+                    }
+
+                    final cache = ref.read(videoInfoCacheProvider);
+                    final cachedInfo = cache[url];
+
+                    if (cachedInfo != null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogWidget(),
+                      );
+                      return;
+                    }
+
+                    try {
+                      final videoInfo = await VideoDownloaderService.getVideoInfo(url: url);
+                      ref.read(currentVideoInfoProvider.notifier).state = videoInfo;
+
+                      print("🟢 Cached: $cache");
+                      ref.read(videoInfoCacheProvider.notifier).state = {
+                        ...cache,
+                        url: videoInfo,
+                      };
+
+                      showDialog(
+                        context: context,
+                        builder: (context) => const DialogWidget(),
+                      );
+                    } catch (e) {
+                      snackBarService.showSnackBar("Failed to fetch video info: $e");
+                    }
 
                   },
                   buttonText: "Get Download Options"

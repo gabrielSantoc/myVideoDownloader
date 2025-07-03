@@ -1,11 +1,17 @@
 import 'package:dumb_ads/features/home/domain/models/videoFormatModel.dart';
+import 'package:dumb_ads/features/home/presentation/thumbnail.dart';
+import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DialogWidget extends StatelessWidget {
+class DialogWidget extends ConsumerWidget {
   const DialogWidget({super.key});
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final videoInfo = ref.watch(currentVideoInfoProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20)
@@ -45,18 +51,7 @@ class DialogWidget extends StatelessWidget {
               child: Row(
                 children: [
 
-                  Container(
-                    width: 80, height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.blue
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
+                  ThumbnailWidget(thumbnailUrl: videoInfo!.thumbnailUrl),
 
                   const SizedBox(width: 12),
 
@@ -65,9 +60,9 @@ class DialogWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Title",
-                          style: TextStyle(
+                        Text(
+                          videoInfo.title,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                             overflow: TextOverflow.ellipsis
@@ -77,7 +72,7 @@ class DialogWidget extends StatelessWidget {
                         const SizedBox(height: 4),
 
                         Text(
-                          "Duration: 1:50",
+                          videoInfo.duration,
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12
@@ -106,7 +101,7 @@ class DialogWidget extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     Flexible(
                       child: ListView.separated(
@@ -144,13 +139,13 @@ class DialogWidget extends StatelessWidget {
                                             fontSize: 14,
                                           ),
                                         ),
-                                        Text(
-                                          '${format.format} • ${format.size}',
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 12,
-                                          ),
-                                        ),
+                                        // Text(
+                                        //   '${format.format} • ${format.size}',
+                                        //   style: TextStyle(
+                                        //     color: Colors.grey[600],
+                                        //     fontSize: 12,
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -170,8 +165,6 @@ class DialogWidget extends StatelessWidget {
                 ),
               )
             ),
-            
-
           ],
         ),
       ),
@@ -212,22 +205,22 @@ final formats = [
     icon: Icons.videocam,
     iconColor: Colors.blue,
   ),
-  VideoFormat(
-    quality: 'Audio Only',
-    format: 'MP3',
-    size: '3.8 MB',
-    type: 'audio',
-    icon: Icons.audiotrack,
-    iconColor: Colors.green,
-  ),
-  VideoFormat(
-    quality: 'Audio Only',
-    format: 'M4A',
-    size: '4.1 MB',
-    type: 'audio',
-    icon: Icons.audiotrack,
-    iconColor: Colors.green,
-  ),
+  // VideoFormat(
+  //   quality: 'Audio Only',
+  //   format: 'MP3',
+  //   size: '3.8 MB',
+  //   type: 'audio',
+  //   icon: Icons.audiotrack,
+  //   iconColor: Colors.green,
+  // ),
+  // VideoFormat(
+  //   quality: 'Audio Only',
+  //   format: 'M4A',
+  //   size: '4.1 MB',
+  //   type: 'audio',
+  //   icon: Icons.audiotrack,
+  //   iconColor: Colors.green,
+  // ),
 ];
 
 
