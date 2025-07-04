@@ -1,6 +1,6 @@
-
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_filex/open_filex.dart';
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 class LocalPushService {
@@ -9,7 +9,21 @@ class LocalPushService {
     const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     
     final InitializationSettings initSettings = InitializationSettings(android: androidSettings);
-    await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        final payload = response.payload;
+        if (payload != null && payload.isNotEmpty) {
+          _onNotificationTapped(payload);
+        }
+      },
+    );
+  }
+
+  static void _onNotificationTapped(String fileName) {
+    final filePath = '/storage/emulated/0/Download/$fileName';
+    OpenFilex.open(filePath);
   }
 
   static Future<void> showDownloadNotification({
@@ -55,9 +69,8 @@ class LocalPushService {
       'Download Complete',
       fileName,
       notificationDetails,
+      payload: fileName
     );
   }
-
-
 
 } 
