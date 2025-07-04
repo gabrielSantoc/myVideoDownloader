@@ -29,6 +29,7 @@ class App extends ConsumerWidget {
             SizedBox(height: 18),
       
             DownloadOptionsCardWidget()
+            
           ],
         )
       ),

@@ -1,6 +1,7 @@
 import 'package:dumb_ads/features/home/domain/models/videoFormatModel.dart';
 import 'package:dumb_ads/features/home/presentation/thumbnail.dart';
 import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
+import 'package:dumb_ads/services/videoDownloaderService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -106,12 +107,35 @@ class DialogWidget extends ConsumerWidget {
                     Flexible(
                       child: ListView.separated(
                         shrinkWrap: true,
-                        itemCount: formats.length,
+                        itemCount: testFormats.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 8),
                         itemBuilder: (context, index) {
-                          final format = formats[index];
+                          final format = testFormats[index];
                           return InkWell(
-                            onTap: (){},
+                            onTap: () async{
+
+                              try{
+                                final downloadVideoFromServer = await VideoDownloaderService.downloadOnServer(
+                                  url: videoInfo.videoUrl,
+                                  quality: format.quality
+                                );
+                                print( "🟢 >>> Video Downloaded Successfully In The Server" );
+                                print( "🟢 >>> $downloadVideoFromServer" );
+
+                                final downloadVideoToPhone = await VideoDownloaderService.downloadVideoToPhone(
+                                  fileName: "Tech Startups in a Nutshell.mp4"
+                                );
+
+                                print( "🟢 >>> Video Downloaded Successfully" );
+
+
+                              }catch(e) {
+                                print("Error downloading video from the server: $e");
+                              }
+
+                              
+
+                            },
                             borderRadius: BorderRadius.circular(12),
                             
                             child: Container(
@@ -172,9 +196,9 @@ class DialogWidget extends ConsumerWidget {
   }
 }
 
-final formats = [
+final testFormats = [
   VideoFormat(
-    quality: '1080p',
+    quality: '1080',
     format: 'MP4',
     size: '45.2 MB',
     type: 'video',
@@ -182,7 +206,7 @@ final formats = [
     iconColor: Colors.blue,
   ),
   VideoFormat(
-    quality: '720p',
+    quality: '720',
     format: 'MP4',
     size: '25.8 MB',
     type: 'video',
@@ -190,7 +214,7 @@ final formats = [
     iconColor: Colors.blue,
   ),
   VideoFormat(
-    quality: '480p',
+    quality: '480',
     format: 'MP4',
     size: '15.4 MB',
     type: 'video',
@@ -198,7 +222,7 @@ final formats = [
     iconColor: Colors.blue,
   ),
   VideoFormat(
-    quality: '360p',
+    quality: '360',
     format: 'MP4',
     size: '9.2 MB',
     type: 'video',

@@ -26,7 +26,8 @@ export function vidInfoController ( req: Request, res: Response ) {
       const info = {
         title: data.title,
         duration: data.duration,
-        thumbnail: data.thumbnail
+        thumbnail: data.thumbnail,
+        videoUrl: url
       }
 
       console.log('Video info retrieved: ', info.title);

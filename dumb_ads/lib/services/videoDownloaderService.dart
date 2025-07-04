@@ -1,14 +1,11 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dumb_ads/features/home/domain/models/videoInfoModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 
-enum VideoQuality {
-  p360,
-  p480,
-  p720,
-  p1080,
-}
 
 final dio = Dio();
 class VideoDownloaderService {
@@ -40,7 +37,7 @@ class VideoDownloaderService {
 
   static Future<Map<String, dynamic>> downloadOnServer({
     required String url,
-    VideoQuality quality = VideoQuality.p720,
+     String quality = "720",
     bool audioOnly = false,
   }) async {
     try {
@@ -48,7 +45,7 @@ class VideoDownloaderService {
         '$baseUrl/api/v1/video/download',
         data: {
           'url': url,
-          'quality': quality.name,
+          'quality': quality,
           'audioOnly': audioOnly,
         },
       );
@@ -73,13 +70,45 @@ class VideoDownloaderService {
     final url = '$baseUrl/api/v1/video/download/$encodedName';
 
     try {
-      final status = await Permission.storage.request();
+      // Debug: Check Android version
+      if (Platform.isAndroid) {
+        final deviceInfo = DeviceInfoPlugin();
+        final androidInfo = await deviceInfo.androidInfo;
+        print("Android SDK: ${androidInfo.version.sdkInt}");
+        print("Android Release: ${androidInfo.version.release}");
+      }
+
+      // Request permission based on Android version
+      PermissionStatus status;
+      
+      if (Platform.isAndroid) {
+        final deviceInfo = DeviceInfoPlugin();
+        final androidInfo = await deviceInfo.androidInfo;
+        
+        if (androidInfo.version.sdkInt >= 30) {
+          // Android 11+ (API 30+)
+          print("Requesting MANAGE_EXTERNAL_STORAGE permission");
+          status = await Permission.manageExternalStorage.request();
+        } else {
+          // Android 10 and below
+          print("Requesting STORAGE permission");
+          status = await Permission.storage.request();
+        }
+      } else {
+        status = await Permission.photos.request();
+      }
+
+      print("Permission status: $status");
+      
       if (!status.isGranted) {
         throw Exception('Storage permission denied');
       }
 
-      final directory = await getExternalStorageDirectory(); 
-      if (directory == null) throw Exception("Could not access local storage");
+      // Rest of your download code...
+      final directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
 
       final filePath = '${directory.path}/$fileName';
 
