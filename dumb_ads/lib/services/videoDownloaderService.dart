@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dumb_ads/features/home/domain/models/videoInfoModel.dart';
+import 'package:dumb_ads/services/localPushService.dart';
+import 'package:dumb_ads/services/permissionsService.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
@@ -70,39 +72,9 @@ class VideoDownloaderService {
     final url = '$baseUrl/api/v1/video/download/$encodedName';
 
     try {
-      // Debug: Check Android version
-      if (Platform.isAndroid) {
-        final deviceInfo = DeviceInfoPlugin();
-        final androidInfo = await deviceInfo.androidInfo;
-        print("Android SDK: ${androidInfo.version.sdkInt}");
-        print("Android Release: ${androidInfo.version.release}");
-      }
+      await PermissionService.checkAndroidVersion();
 
-      // Request permission based on Android version
-      PermissionStatus status;
-      
-      if (Platform.isAndroid) {
-        final deviceInfo = DeviceInfoPlugin();
-        final androidInfo = await deviceInfo.androidInfo;
-        
-        if (androidInfo.version.sdkInt >= 30) {
-          // Android 11+ (API 30+)
-          print("Requesting MANAGE_EXTERNAL_STORAGE permission");
-          status = await Permission.manageExternalStorage.request();
-        } else {
-          // Android 10 and below
-          print("Requesting STORAGE permission");
-          status = await Permission.storage.request();
-        }
-      } else {
-        status = await Permission.photos.request();
-      }
-
-      print("Permission status: $status");
-      
-      if (!status.isGranted) {
-        throw Exception('Storage permission denied');
-      }
+      await PermissionService.requestStoragePermission();
 
       // Rest of your download code...
       final directory = Directory('/storage/emulated/0/Download');
@@ -115,12 +87,16 @@ class VideoDownloaderService {
       await dio.download(
         url,
         filePath,
-        onReceiveProgress: (received, total) {
+        onReceiveProgress: (received, total) async{
           if (total != -1) {
-            print('Download progress: ${(received / total * 100).toStringAsFixed(0)}%');
+            final progress = (received / total * 100).toInt();
+            print('Download progress: $progress%');
+
+            await LocalPushService.showDownloadNotification(progress: progress, fileName: fileName);
           }
         },
       );
+      await LocalPushService.completeDownloadNotification(fileName);
 
       print("Video downloaded to: $filePath");
 
