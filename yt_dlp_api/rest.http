@@ -8,7 +8,7 @@ content-type: application/json
 }
 
 
-### GET FULL VID META DATA
+### GET VID FULL META DATA
 GET http://localhost:3000/api/v1/video/info/meta-data?url=https://www.youtube.com/watch?v=YCZu78lVESY HTTP/1.1
 content-type: application/json
 
