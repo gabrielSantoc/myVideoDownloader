@@ -7,6 +7,12 @@ content-type: application/json
   "url": "https://www.youtube.com/watch?v=YCZu78lVESY"
 }
 
+
+### GET FULL VID META DATA
+GET http://localhost:3000/api/v1/video/info/meta-data?url=https://www.youtube.com/watch?v=YCZu78lVESY HTTP/1.1
+content-type: application/json
+
+
 ### DOWNLOAD VIDEO
 POST http://localhost:3000/api/v1/video/download HTTP/1.1
 content-type: application/json
