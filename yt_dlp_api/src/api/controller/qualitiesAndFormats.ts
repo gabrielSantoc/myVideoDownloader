@@ -36,7 +36,6 @@ export function qualitiesAndFormatsController(req: Request, res: Response) {
       // convert line into an array.
       const parts = line.trim().split(/\s+/);
       
-      
       if (parts.length < 3 || line.includes('ID') || line.includes('---')) {
         return;
       }

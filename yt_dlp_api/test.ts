@@ -1,8 +1,8 @@
 
 import { exec } from 'child_process'
 
-// const url = "https://youtu.be/pBa_QBlW4OA?si=yKrgc5QAyrdqYrfC"
-const url = "https://www.facebook.com/reel/1525212985126244"
+const url = "https://youtu.be/pBa_QBlW4OA?si=yKrgc5QAyrdqYrfC"
+// const url = "https://www.facebook.com/reel/1525212985126244"
 const listAllFormatsCommand = `yt-dlp --list-formats "${url}"`;
 const fullMetaDataJsonCommand = `yt-dlp -j "${url}"`;
 
@@ -25,6 +25,8 @@ exec( listAllFormatsCommand, (error, stdout) => {
     console.log(`🟢 >>> PARTS ${index + 1} LENGTH: ${parts.length}`);
     console.log(`🟢 >>> PARTS ${index + 1} FORMAT ID: ${ parts[0] }`);
     console.log(`🟢 >>> PARTS ${index + 1} EXT: ${ parts[1] }`);
+    const filesize = extractFileSize(parts.slice(2).join(' '));
+    console.log(`🟢 >>> PARTS ${index + 1} FILE SIZE: ${  filesize }`);
     console.log(`🟢 >>> PARTS ${index + 1} DESCRIPTION: ${  parts.slice(2).join(' ') }`);
     console.log("");
 
@@ -52,7 +54,7 @@ exec( listAllFormatsCommand, (error, stdout) => {
       }
     }
 
-    const filesize = extractFileSize(description);
+    // const filesize = extractFileSize(description);
 
     const key = `${resolution}-${type}-${ext}`;
     if(resolution !== 'unknown' && !seen.has(key)) {
@@ -90,15 +92,41 @@ function extractFileSize(description: string): string | undefined {
   const words = description.split(' ');
 
   for(const word of words) {
-    const lastChar = word.slice(-1).toLocaleLowerCase();
+    if(word.includes('~')) {
+      let sizePart = word;
+      sizePart = sizePart.slice(1);
 
-    const isUnit = ['k', 'm', 'g'].includes(lastChar);
-    const numberPart = word.slice(0, -1);
+      let i = 0
+      while(
+        i < sizePart.length &&
+        !isNaN(Number(sizePart[i])) ||
+        sizePart[i] === '.'
+      ) {
+        i++
+      }
 
-    if(isUnit && !isNaN(Number(numberPart))) {
-      return word;
+      let numberPart = sizePart.slice(0, i);
+      let unitPart = sizePart.slice(i);
+
+      let sizeInMb: number;
+
+      switch(unitPart) {
+        case "KiB":
+          sizeInMb = (Number(numberPart) * 1024) / 1_000_000;
+          break;
+        case "MiB":
+          sizeInMb = (Number(numberPart) * 1_048_576) / 1_000_000;
+          break;
+        case "GiB":
+          sizeInMb = (Number(numberPart) * 1_073_741_824) / 1_000_000;
+          break;
+        default:
+          return undefined
+      }
+      
+      return sizeInMb.toFixed(2) + 'MB';
     }
-
+   
   }
   return undefined;
 }

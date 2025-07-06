@@ -7,10 +7,10 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text("😡DUMBADS"),
-      titleSpacing: -10,
+      title: const Text("DUMBADS"),
+      // titleSpacing: -10,
       centerTitle: false,
-      leading: const Icon(Icons.arrow_downward_sharp),
+      // leading: const Icon(Icons.arrow_downward_sharp),
       foregroundColor: Colors.white,
       titleTextStyle: const TextStyle(
         fontSize: 18,
