@@ -11,7 +11,6 @@ class VideoInfo {
     required this.videoUrl,
   });
 
-
   factory VideoInfo.fromJson(Map<String, dynamic> json) {
     return VideoInfo(
       title: json['title'],

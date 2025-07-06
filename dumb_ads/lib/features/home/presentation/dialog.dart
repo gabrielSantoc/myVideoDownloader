@@ -1,5 +1,6 @@
 import 'package:dumb_ads/features/home/domain/models/videoFormatModel.dart';
 import 'package:dumb_ads/features/home/presentation/thumbnail.dart';
+import 'package:dumb_ads/features/home/providers/videoFormatProvider.dart';
 import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
 import 'package:dumb_ads/services/videoDownloaderService.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class DialogWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videoInfo = ref.watch(currentVideoInfoProvider);
+    final videoFormats = ref.watch(videoFormatsProvider);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -89,7 +91,7 @@ class DialogWidget extends ConsumerWidget {
             //Format Options
             Flexible(
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -110,14 +112,14 @@ class DialogWidget extends ConsumerWidget {
                         itemCount: testFormats.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 8),
                         itemBuilder: (context, index) {
-                          final format = testFormats[index];
+                          final format = videoFormats![index] ;
                           return InkWell(
                             onTap: () async{
 
                               try{
                                 final downloadVideoFromServer = await VideoDownloaderService.downloadOnServer(
                                   url: videoInfo.videoUrl,
-                                  quality: format.quality
+                                  quality: format.resolution
                                 );
                                 print( "🟢 >>> Video Downloaded Successfully In The Server" );
                                 print( "🟢 >>> $downloadVideoFromServer" );
@@ -146,9 +148,9 @@ class DialogWidget extends ConsumerWidget {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    format.icon,
-                                    color: format.iconColor,
+                                  const Icon(
+                                    Icons.audiotrack,
+                                    color: Colors.green,
                                     size: 20,
                                   ),
                                   const SizedBox(width: 12),
@@ -157,19 +159,19 @@ class DialogWidget extends ConsumerWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          format.quality,
+                                          format.resolution,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
                                           ),
                                         ),
-                                        // Text(
-                                        //   '${format.format} • ${format.size}',
-                                        //   style: TextStyle(
-                                        //     color: Colors.grey[600],
-                                        //     fontSize: 12,
-                                        //   ),
-                                        // ),
+                                        Text(
+                                          '${format.extension} • ${format.filesize}',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -198,36 +200,32 @@ class DialogWidget extends ConsumerWidget {
 
 final testFormats = [
   VideoFormat(
-    quality: '1080',
-    format: 'MP4',
-    size: '45.2 MB',
+    resolution: '1080',
+    extension: 'MP4',
+    filesize: '45.2 MB',
     type: 'video',
-    icon: Icons.videocam,
-    iconColor: Colors.blue,
+
   ),
   VideoFormat(
-    quality: '720',
-    format: 'MP4',
-    size: '25.8 MB',
+    resolution: '1080',
+    extension: 'MP4',
+    filesize: '45.2 MB',
     type: 'video',
-    icon: Icons.videocam,
-    iconColor: Colors.blue,
+
   ),
   VideoFormat(
-    quality: '480',
-    format: 'MP4',
-    size: '15.4 MB',
+    resolution: '1080',
+    extension: 'MP4',
+    filesize: '45.2 MB',
     type: 'video',
-    icon: Icons.videocam,
-    iconColor: Colors.blue,
+
   ),
   VideoFormat(
-    quality: '360',
-    format: 'MP4',
-    size: '9.2 MB',
+    resolution: '1080',
+    extension: 'MP4',
+    filesize: '45.2 MB',
     type: 'video',
-    icon: Icons.videocam,
-    iconColor: Colors.blue,
+
   ),
   // VideoFormat(
   //   quality: 'Audio Only',

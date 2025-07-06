@@ -1,19 +1,27 @@
-import 'package:flutter/material.dart';
-
 class VideoFormat {
-  final String quality;
-  final String format;
-  final String size;
+  final String resolution;
+  final String extension;
   final String type;
-  final IconData icon;
-  final Color iconColor;
-
+  final String? filesize;
+  
   VideoFormat({
-    required this.quality,
-    required this.format,
-    required this.size,
+    required this.resolution,
+    required this.extension,
     required this.type,
-    required this.icon,
-    required this.iconColor,
+    this.filesize,
   });
+
+  factory VideoFormat.fromJson(Map<String, dynamic> json) {
+    return VideoFormat(
+      resolution: json['resolution'] ?? 'unknown',
+      extension: json['ext'] ?? 'unknown',
+      type: json['type'] ?? 'unknown',
+      filesize: json['filesize'] ?? 'unknown',
+    );
+  }
+
+  static List<VideoFormat> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => VideoFormat.fromJson(json)).toList();
+  }
+
 }

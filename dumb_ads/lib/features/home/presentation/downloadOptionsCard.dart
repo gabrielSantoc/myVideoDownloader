@@ -1,6 +1,7 @@
 import 'package:dumb_ads/features/home/presentation/dialog.dart';
 import 'package:dumb_ads/features/home/providers/controllerProvider.dart';
 import 'package:dumb_ads/features/home/providers/snackBarProvider.dart';
+import 'package:dumb_ads/features/home/providers/videoFormatProvider.dart';
 import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
 import 'package:dumb_ads/services/videoDownloaderService.dart';
 import 'package:dumb_ads/shared/constant.dart';
@@ -56,7 +57,7 @@ class DownloadOptionsCardWidget extends ConsumerWidget {
                     if (cachedInfo != null) {
                       showDialog(
                         context: context,
-                        builder: (context) => DialogWidget(),
+                        builder: (context) => const DialogWidget(),
                       );
                       return;
                     }
@@ -64,6 +65,9 @@ class DownloadOptionsCardWidget extends ConsumerWidget {
                     try {
                       final videoInfo = await VideoDownloaderService.getVideoInfo(url: url);
                       ref.read(currentVideoInfoProvider.notifier).state = videoInfo;
+
+                      final availableVideoFormats = await VideoDownloaderService.getQualitiesAndFormats(url: url);
+                      ref.read(videoFormatsProvider.notifier).state = availableVideoFormats;
 
                       print("🟢 Cached: $cache");
                       ref.read(videoInfoCacheProvider.notifier).state = {
