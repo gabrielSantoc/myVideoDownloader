@@ -10,6 +10,7 @@ export function serveDownloadedFileController( req: Request, res: Response ) {
 
   if(!fs.existsSync(vidFilePath)) {
     res.status(404).json({ error: "File not found" });
+    return;
   }
 
   res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);

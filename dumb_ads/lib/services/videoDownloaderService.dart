@@ -88,7 +88,10 @@ class VideoDownloaderService {
             final progress = (received / total * 100).toInt();
             print('Download progress: $progress%');
 
-            await LocalPushService.showDownloadNotification(progress: progress, fileName: fileName);
+            await LocalPushService.showDownloadNotification(
+              progress: progress,
+              fileName: fileName
+            );
           }
         },
       );

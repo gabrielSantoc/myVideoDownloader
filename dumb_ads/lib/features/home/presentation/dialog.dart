@@ -114,7 +114,7 @@ class DialogWidget extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           final format = videoFormats![index] ;
                           return InkWell(
-                            onTap: () async{
+                            onTap: () async {
 
                               try{
                                 final downloadVideoFromServer = await VideoDownloaderService.downloadOnServer(
@@ -123,19 +123,20 @@ class DialogWidget extends ConsumerWidget {
                                 );
                                 print( "🟢 >>> Video Downloaded Successfully In The Server" );
                                 print( "🟢 >>> $downloadVideoFromServer" );
+                              }catch(e) {
+                                print("Error downloading video from the server: $e");
+                              }                              
 
+                              try{
                                 final downloadVideoToPhone = await VideoDownloaderService.downloadVideoToPhone(
-                                  fileName: "Tech Startups in a Nutshell.mp4"
+                                  fileName: '${videoInfo.title}.${format.extension}'
                                 );
-
-                                print( "🟢 >>> Video Downloaded Successfully" );
-
-
+                                print("🟢 >>> Video Title: ${ videoInfo.title}${format.extension}");                                
+                                print( "🟢 >>> Video Downloaded Successfully To the Phone" );
                               }catch(e) {
                                 print("Error downloading video from the server: $e");
                               }
 
-                              
 
                             },
                             borderRadius: BorderRadius.circular(12),

@@ -24,4 +24,4 @@ class VideoFormat {
     return jsonList.map((json) => VideoFormat.fromJson(json)).toList();
   }
 
-}
+} 
