@@ -15,7 +15,7 @@ router.get('/v1/video/info/meta-data', fullMetaDataController);
 
 router.post('/v1/video/download', downloadVidController);
 
-router.get('/v1/video/download/:fileName',  serveDownloadedFileController);
+router.get('/v1/video/download/:fileName', serveDownloadedFileController);
 
 router.post('/v1/video/info/quality-formats', qualitiesAndFormatsController);
 

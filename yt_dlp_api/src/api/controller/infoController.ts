@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { exec } from 'child_process'
+import { sanitizeTitle } from '../../utils/sanitizeTitle';
 
 export function vidInfoController ( req: Request, res: Response ) {
   const { url } = req.body;
@@ -22,7 +23,7 @@ export function vidInfoController ( req: Request, res: Response ) {
       const data = JSON.parse(stdout);
 
       const info = {
-        title: data.title,
+        title: sanitizeTitle(data.title),
         duration: data.duration,
         thumbnail: data.thumbnail,
         videoUrl: url

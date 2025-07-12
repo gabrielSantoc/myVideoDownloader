@@ -8,6 +8,7 @@ import 'package:dumb_ads/services/permissionsService.dart';
 
 final dio = Dio();
 class VideoDownloaderService {
+  
   static const String baseUrl = 'http://192.168.1.3:3000';
 
   static Future<VideoInfo> getVideoInfo({required String url}) async {
@@ -67,6 +68,7 @@ class VideoDownloaderService {
   static Future<void> downloadVideoToPhone({required String fileName}) async {
     final encodedName = Uri.encodeComponent(fileName);
     final url = '$baseUrl/api/v1/video/download/$encodedName';
+    print("🟢 >>> URL $url");
 
     await PermissionService.checkAndroidVersion();
     await PermissionService.requestStoragePermission();
