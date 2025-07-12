@@ -1,4 +1,5 @@
 import 'package:dumb_ads/features/home/domain/models/videoFormatModel.dart';
+import 'package:dumb_ads/features/home/presentation/loadingDialog.dart';
 import 'package:dumb_ads/features/home/presentation/thumbnail.dart';
 import 'package:dumb_ads/features/home/providers/videoFormatProvider.dart';
 import 'package:dumb_ads/features/home/providers/videoInfoProvider.dart';
@@ -116,6 +117,7 @@ class DialogWidget extends ConsumerWidget {
                           return InkWell(
                             onTap: () async {
 
+
                               try{
                                 final downloadVideoFromServer = await VideoDownloaderService.downloadOnServer(
                                   url: videoInfo.videoUrl,
@@ -133,9 +135,12 @@ class DialogWidget extends ConsumerWidget {
                                 );
                                 print("🟢 >>> Video Title: ${ videoInfo.title}${format.extension}");                                
                                 print( "🟢 >>> Video Downloaded Successfully To the Phone" );
+                                Navigator.pop(context);
                               }catch(e) {
                                 print("Error downloading video from the server: $e");
                               }
+
+                              
 
 
                             },

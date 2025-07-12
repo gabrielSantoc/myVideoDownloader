@@ -1,4 +1,5 @@
 import 'package:dumb_ads/features/home/presentation/dialog.dart';
+import 'package:dumb_ads/features/home/presentation/loadingDialog.dart';
 import 'package:dumb_ads/features/home/providers/controllerProvider.dart';
 import 'package:dumb_ads/features/home/providers/snackBarProvider.dart';
 import 'package:dumb_ads/features/home/providers/videoFormatProvider.dart';
@@ -63,6 +64,13 @@ class DownloadOptionsCardWidget extends ConsumerWidget {
                     }
 
                     try {
+
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const LoadingDialog(text: "Fetching video details, please hold on...😁"),
+                      );
+
                       final videoInfo = await VideoDownloaderService.getVideoInfo(url: url);
                       ref.read(currentVideoInfoProvider.notifier).state = videoInfo;
 
@@ -74,7 +82,7 @@ class DownloadOptionsCardWidget extends ConsumerWidget {
                         ...cache,
                         url: videoInfo,
                       };
-
+                      Navigator.pop(context);
                       showDialog(
                         context: context,
                         builder: (context) => const DialogWidget(),
