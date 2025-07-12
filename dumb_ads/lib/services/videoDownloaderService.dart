@@ -1,19 +1,21 @@
 import 'dart:io';
 import 'package:dumb_ads/features/home/domain/models/videoFormatModel.dart';
 import 'package:dumb_ads/features/home/domain/models/videoInfoModel.dart';
+import 'package:dumb_ads/services/permissionsService.dart';
 import 'package:dumb_ads/services/localPushService.dart';
 import 'package:dio/dio.dart';
-import 'package:dumb_ads/services/permissionsService.dart';
 
-
-final dio = Dio();
 class VideoDownloaderService {
-  
   static const String baseUrl = 'http://192.168.1.3:3000';
+  static Dio? _dio;
+
+  static Future<void> init() async {
+    _dio = Dio();
+  }
 
   static Future<VideoInfo> getVideoInfo({required String url}) async {
     try {
-      final response = await dio.post(
+      final response = await _dio!.post(
         '$baseUrl/api/v1/video/info',
         data: {
           'url': url,
@@ -41,7 +43,7 @@ class VideoDownloaderService {
     bool audioOnly = false,
   }) async {
     try {
-      final response = await dio.post(
+      final response = await _dio!.post(
         '$baseUrl/api/v1/video/download',
         data: {
           'url': url,
@@ -82,7 +84,7 @@ class VideoDownloaderService {
 
       final filePath = '${directory.path}/$fileName';
 
-      await dio.download(
+      await _dio!.download(
         url,
         filePath,
         onReceiveProgress: (received, total) async{
@@ -110,7 +112,7 @@ class VideoDownloaderService {
   static Future<List<VideoFormat>> getQualitiesAndFormats({required String url}) async {
 
     try {
-      final response = await dio.post(
+      final response = await _dio!.post(
         '$baseUrl/api/v1/video/info/quality-formats',
         data: {
           'url': url,

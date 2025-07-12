@@ -32,7 +32,6 @@ export function downloadVidController(req: Request, res: Response) {
       console.log('⬇ Downloading video quality:', quality);
     }
 
-
     command += ` -o "downloads/${fileTitle}.%(ext)s" --ffmpeg-location="${ffmpegDir}" --no-check-certificates --user-agent "Mozilla/5.0" "${url}"`;
     console.log('➡ Executing command:', command);
     // download video
